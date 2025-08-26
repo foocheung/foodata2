@@ -23,5 +23,6 @@ load_data3B <- function() {
 load_data4 <- function() {
   data <- readxl::read_xlsx(system.file("data", "synthetic_data.xlsx", package = "foodata2"))
   data <- as.data.frame(data, check.names = FALSE)
+  colnames(data) <- gsub("`", "", colnames(data))
   return(data)
 }
