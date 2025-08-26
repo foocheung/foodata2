@@ -21,10 +21,22 @@ load_data3B <- function() {
 }
 
 load_data4 <- function() {
-  data <- readxl::read_xlsx(system.file("data", "synthetic_data.xlsx", package = "foodata2"))
+  # read the Excel file, force first column (ExpDate) to text
+  data <- readxl::read_xlsx(
+    system.file("data", "synthetic_data.xlsx", package = "foodata2"),
+    col_types = c("text", rep("guess", readxl::ncol_readxl(
+      system.file("data", "synthetic_data.xlsx", package = "foodata2")
+    ) - 1))
+  )
+  
+  # keep original names (don't convert to syntactic)
   data <- as.data.frame(data, check.names = FALSE)
- # colnames(data) <- gsub('", "", colnames(data))
+  
+  # strip stray backticks
   colnames(data) <- gsub("`", "", colnames(data))
-  data <- data%>% as_tibble()
-   return(data)
+  
+  # return as tibble
+  data <- tibble::as_tibble(data)
+  
+  return(data)
 }
