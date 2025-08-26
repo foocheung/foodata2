@@ -25,5 +25,6 @@ load_data4 <- function() {
   data <- as.data.frame(data, check.names = FALSE)
  # colnames(data) <- gsub('", "", colnames(data))
   colnames(data) <- gsub("`", "", colnames(data))
+  data <- data%>% as_tibble()
    return(data)
 }
