@@ -20,23 +20,29 @@ load_data3B <- function() {
   return(data)
 }
 
+excel_serial_to_date <- function(x) {
+  # Excel origin for Windows: 1899-12-30
+  as.character(as.Date(as.numeric(x), origin = "1899-12-30"))
+}
+
 load_data4 <- function() {
-  # read the Excel file, force first column (ExpDate) to text
-  data <- readxl::read_xlsx(
-    system.file("data", "synthetic_data.xlsx", package = "foodata2"),
-    col_types = c("text", rep("guess", readxl::ncol_readxl(
-      system.file("data", "synthetic_data.xlsx", package = "foodata2")
-    ) - 1))
-  )
+  file_path <- system.file("data", "synthetic_data.xlsx", package = "foodata2")
   
-  # keep original names (don't convert to syntactic)
+  # peek at one row to count columns
+  n_cols <- ncol(readxl::read_xlsx(file_path, n_max = 1))
+  
+  # force ExpDate to text, guess the rest
+  col_types <- c("text", rep("guess", n_cols - 1))
+  
+  data <- readxl::read_xlsx(file_path, col_types = col_types)
   data <- as.data.frame(data, check.names = FALSE)
   
-  # strip stray backticks
+  # clean column names
   colnames(data) <- gsub("`", "", colnames(data))
   
-  # return as tibble
-  data <- tibble::as_tibble(data)
+  # fix ExpDate: convert serials into readable dates
+  data$ExpDate <- excel_serial_to_date(data$ExpDate)
   
-  return(data)
+  return(tibble::as_tibble(data))
 }
+
