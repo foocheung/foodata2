@@ -1,0 +1,16 @@
+Package: foodata2
+Type: Package
+Title: Example Data Package
+Version: 0.1.0
+Author: Foo Cheung
+Maintainer: The package maintainer <foocheung@yahoo.com>
+Description: Example dataset package containing datasets.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.6.0)
+Imports: dplyr,
+         arrow,
+         SomaDataIO,
+         readxl,
+         tidyverse
